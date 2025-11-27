@@ -1,0 +1,19 @@
+name: Jira Copilot PoC
+on:
+  repository_dispatch:
+    types: [jira_ai_trigger]
+
+jobs:
+  copilot-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot@latest
+
+      - name: Generate Hello World with Copilot
+        run: |
+          echo "TOKEN: $GITHUB_TOKEN"
+          echo "Asking Copilot to generate Hello World..."
+          copilot -p "create a hello world program in python"
+        env:
+          GITHUB_TOKEN: token_from_event_payload
