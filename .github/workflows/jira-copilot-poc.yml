@@ -10,10 +10,13 @@ jobs:
       - name: Install Copilot CLI
         run: npm install -g @github/copilot@latest
 
+      - name: echo event payload
+        run: echo "${{ toJson(github.event) }}"
+
       - name: Generate Hello World with Copilot
         run: |
           echo "TOKEN: $GITHUB_TOKEN"
           echo "Asking Copilot to generate Hello World..."
           copilot -p "create a hello world program in python"
         env:
-          GITHUB_TOKEN: token_from_event_payload
+          GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
