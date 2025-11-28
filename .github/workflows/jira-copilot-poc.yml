@@ -9,6 +9,9 @@ jobs:
     timeout-minutes: 15
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: 'Setup Node.js'
         uses: 'actions/setup-node@v4'
         with:
@@ -27,7 +30,12 @@ jobs:
       - name: Generate Hello World with Copilot
         run: |
           echo "TOKEN: $GITHUB_TOKEN"
+          echo "CONFIG HOME: $XDG_CONFIG_HOME"
+          echo "Workspace: $GITHUB_WORKSPACE"
+          echo "Current Directory:"
+          ls -la
           echo "Asking Copilot to generate Hello World..."
           copilot -p "create a simple hello world script in python"
         env:
           GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
+          XDG_CONFIG_HOME: ${{ github.workspace }}
