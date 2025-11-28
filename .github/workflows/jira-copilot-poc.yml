@@ -6,12 +6,23 @@ on:
 jobs:
   copilot-run:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
+      - name: 'Setup Node.js'
+        uses: 'actions/setup-node@v4'
+        with:
+          node-version: '22'
+
       - name: Install Copilot CLI
         run: npm install -g @github/copilot@latest
 
       - name: echo event payload
         run: echo "${{ toJson(github.event.client_payload) }}"
+
+      - name: Run MCP Atlassian Docker Container
+        run: |
+          docker run --rm ghcr.io/sooperset/mcp-atlassian:latest
 
       - name: Generate Hello World with Copilot
         run: |
