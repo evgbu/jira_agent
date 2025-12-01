@@ -30,7 +30,7 @@ jobs:
             -e JIRA_USERNAME \
             -e JIRA_API_TOKEN \
             ghcr.io/sooperset/mcp-atlassian:latest \
-            --transport sse --port 9000 -vv
+            --transport streamable-http --port 9000 -vv
         env:
           JIRA_URL: "https://evgenyburmakov.atlassian.net/"
           JIRA_USERNAME: "evgeny.burmakov@gmail.com"
