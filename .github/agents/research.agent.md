@@ -5,4 +5,4 @@ description:
 
 Steps:
 1. Read title of PR: https://github.com/evgbu/copilot/pull/1
-2. Put the title as comment into: https://evgenyburmakov.atlassian.net/browse/SCRUM-3
+2. Put the title as comment into: https://evgenyburmakov.atlassian.net/browse/SCRUM-3. If you couldn't read PR title, describe the problem into comment of work item.
