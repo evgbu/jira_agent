@@ -67,11 +67,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
           XDG_CONFIG_HOME: ${{ github.workspace }}
-          GH_TOKEN: '${{  secrets.GITHUB_TOKEN }}'
-
-      - name: Stop MCP Atlassian Docker Container
-        if: always()
-        run: docker stop mcp-atlassian && docker rm mcp-atlassian
 
       - name: Upload Copilot logs
         if: always()
@@ -80,3 +75,7 @@ jobs:
           name: copilot-logs
           path: .copilot/logs/
           retention-days: 7
+
+      - name: Post Run MCP Atlassian Docker Container
+        if: always()
+        run: docker stop mcp-atlassian && docker rm mcp-atlassian
