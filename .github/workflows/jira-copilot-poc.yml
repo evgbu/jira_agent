@@ -25,17 +25,49 @@ jobs:
 
       - name: Run MCP Atlassian Docker Container
         run: |
-          docker run --rm ghcr.io/sooperset/mcp-atlassian:latest
+          docker run -d --name mcp-atlassian -p 9000:9000 \
+            -e JIRA_URL \
+            -e JIRA_USERNAME \
+            -e JIRA_API_TOKEN \
+            ghcr.io/sooperset/mcp-atlassian:latest \
+            --transport sse --port 9000 -vv
+        env:
+          JIRA_URL: "https://evgenyburmakov.atlassian.net/"
+          JIRA_USERNAME: "evgeny.burmakov@gmail.com"
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
 
-      - name: Generate Hello World with Copilot
+      - name: Wait for MCP Server to be ready
         run: |
-          echo "TOKEN: $GITHUB_TOKEN"
-          echo "CONFIG HOME: $XDG_CONFIG_HOME"
-          echo "Workspace: $GITHUB_WORKSPACE"
-          echo "Current Directory:"
-          ls -la
-          echo "Asking Copilot to generate Hello World..."
-          copilot -p "create a simple hello world script in python"
+          echo "Waiting for MCP server to start..."
+          for i in {1..30}; do
+            if curl -s http://localhost:9000 > /dev/null 2>&1; then
+              echo "MCP server is ready!"
+              exit 0
+            fi
+            echo "Attempt $i: Server not ready yet, waiting..."
+            sleep 2
+          done
+          echo "MCP server failed to start within timeout"
+          exit 1
+
+      - name: Run Copilot
+        run: |
+          copilot --allow-all-tools \
+            --additional-mcp-config @".github/mcp-config.json" \
+            --agent "research" \
+             --log-dir ".copilot/logs/" --log-level all
         env:
           GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
           XDG_CONFIG_HOME: ${{ github.workspace }}
+
+      - name: Stop MCP Atlassian Docker Container
+        if: always()
+        run: docker stop mcp-atlassian && docker rm mcp-atlassian
+
+      - name: Upload Copilot logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: copilot-logs
+          path: .copilot/logs/
+          retention-days: 7

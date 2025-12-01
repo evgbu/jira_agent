@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "github_mcp_server": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {},
+      "tools": [
+        "*"
+      ]
+    },
+    "mcp-atlassian": {
+      "type": "http",
+      "url": "http://localhost:9000/sse",
+      "headers": {},
+      "tools": [
+        "*"
+      ]
+    }
+  }
+}
