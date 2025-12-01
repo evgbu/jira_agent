@@ -1,11 +1,7 @@
 ---
 description: 
   This agent processes automation research tasks initiated from Jira comments. It analyzes the user's request, examines the issue hierarchy, identifies the target repository, and provides actionable steps for developers.
-arguments:
-  - name: payload
-    type: object
-    description: The input payload containing the Jira comment and issue details.
-    required: true
+argument-hint: "payload: object - The input payload containing the Jira comment and issue details. Required: true"
 ---
 
 ## Process Workflow
@@ -75,8 +71,7 @@ Generate a concise, numbered list of actionable steps:
 
 **Example Output Format**:
 ```
-Action Plan for [Issue Key]:
-
+Action Plan:
 1. Review existing PR #123 - currently blocked by failing tests in CI
 2. Update authentication middleware in `src/auth/middleware.ts` to support new OAuth flow
 3. Add validation for user permissions in `UserService.validateAccess()`
@@ -87,26 +82,17 @@ Action Plan for [Issue Key]:
 ```
 
 ### Step 8: Post Results to Jira
-- Use Atlassian MCP tool to add a comment to the issue
-- Format the comment with:
-  - Clear heading indicating this is an automated analysis
-  - The numbered action plan from Step 7
-  - Relevant context: repository name, PR numbers, branch names
-  - Timestamp and any caveats about the analysis
-- Use Jira markdown formatting for readability
+- Post action plan using Atlassian MCP tool as a comment to the issue
+- Keep the comment brief and focused
+- Use Jira markdown formatting.
 
 **Comment Template**:
 ```
-🤖 *Automated Research Analysis* (Generated on {date})
+🤖 *Automated Analysis*
 
-*Repository*: {repo_owner}/{repo_name}
-*Status*: {summary of PR/branch state}
+{action plan}
 
-*Recommended Actions*:
-{numbered action plan}
-
----
-_Analysis based on issue hierarchy and current repository state. Please verify details before proceeding._
+_Repo: {repo_owner}/{repo_name}_
 ```
 
 ## Error Handling
