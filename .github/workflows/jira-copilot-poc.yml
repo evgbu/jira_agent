@@ -3,6 +3,13 @@ on:
   repository_dispatch:
     types: [jira_ai_trigger]
 
+permissions:
+  contents: 'read'
+  id-token: 'write'
+  issues: 'write'
+  pull-requests: 'write'
+  statuses: 'write'
+
 jobs:
   copilot-run:
     runs-on: ubuntu-latest
@@ -60,6 +67,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
           XDG_CONFIG_HOME: ${{ github.workspace }}
+          GH_TOKEN: '${{  secrets.GITHUB_TOKEN }}'
 
       - name: Stop MCP Atlassian Docker Container
         if: always()
