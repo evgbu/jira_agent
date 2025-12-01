@@ -55,7 +55,8 @@ jobs:
           copilot --allow-all-tools \
             --additional-mcp-config @".github/mcp-config.json" \
             --agent "research" \
-             --log-dir ".copilot/logs/" --log-level all
+            -p "run" \
+            --log-dir ".copilot/logs/" --log-level all
         env:
           GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
           XDG_CONFIG_HOME: ${{ github.workspace }}
