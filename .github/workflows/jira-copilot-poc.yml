@@ -62,11 +62,12 @@ jobs:
           copilot --allow-all-tools \
             --additional-mcp-config @".github/mcp-config.json" \
             --agent "research" \
-            -p "run" \
+            -p "$PAYLOAD" \
             --log-dir ".copilot/logs/" --log-level all
         env:
           GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
           XDG_CONFIG_HOME: ${{ github.workspace }}
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
 
       - name: Upload Copilot logs
         if: always()

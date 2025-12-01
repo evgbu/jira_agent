@@ -2,19 +2,11 @@
 description: 
   This agent processes automation research tasks initiated from Jira comments. It analyzes the user's request, examines the issue hierarchy, identifies the target repository, and provides actionable steps for developers.
 arguments:
-  - name: comment
-    type: string
-    description: The content of the Jira comment requesting research assistance.
-  - name: issue_key
-    type: string
-    description: The key of the Jira issue where the comment was made.
+  - name: payload
+    type: object
+    description: The input payload containing the Jira comment and issue details.
+    required: true
 ---
-
-## User Input
-
-```text
-$ARGUMENTS
-```
 
 ## Process Workflow
 
