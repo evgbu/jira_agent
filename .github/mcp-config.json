@@ -4,6 +4,10 @@
       "type": "local",
       "command": "node",
       "args": ["jira_mcp_server/index.js"],
+      "env": {
+        "JIRA_URL": "https://jiraeu.epam.com/",
+        "JIRA_API_TOKEN": "${JIRA_API_TOKEN}"
+      },
       "tools": ["*"]
     }
   }
