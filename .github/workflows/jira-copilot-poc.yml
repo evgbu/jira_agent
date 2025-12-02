@@ -23,32 +23,8 @@ jobs:
       - name: echo event payload
         run: echo "${{ toJson(github.event.client_payload) }}"
 
-      - name: Run MCP Atlassian Docker Container
-        run: |
-          docker run -d --name mcp-atlassian -p 9000:9000 \
-            -e JIRA_URL \
-            -e JIRA_USERNAME \
-            -e JIRA_API_TOKEN \
-            ghcr.io/sooperset/mcp-atlassian:latest \
-            --transport streamable-http --port 9000 -vv
-        env:
-          JIRA_URL: "https://evgenyburmakov.atlassian.net/"
-          JIRA_USERNAME: "evgeny.burmakov@gmail.com"
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-
-      - name: Wait for MCP Server to be ready
-        run: |
-          echo "Waiting for MCP server to start..."
-          for i in {1..30}; do
-            if curl -s http://localhost:9000 > /dev/null 2>&1; then
-              echo "MCP server is ready!"
-              exit 0
-            fi
-            echo "Attempt $i: Server not ready yet, waiting..."
-            sleep 2
-          done
-          echo "MCP server failed to start within timeout"
-          exit 1
+      - name: Install MCP Server dependencies
+        run: npm install --prefix jira_mcp_server
 
       - name: Run Copilot
         run: |
@@ -61,6 +37,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
           XDG_CONFIG_HOME: ${{ github.workspace }}
           PAYLOAD: ${{ toJson(github.event.client_payload) }}
+          JIRA_URL: "https://jiraeu.epam.com/"
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN_PREM }}
 
       - name: Upload Copilot logs
         if: always()
@@ -69,7 +47,3 @@ jobs:
           name: copilot-logs
           path: .copilot/logs/
           retention-days: 7
-
-      - name: Post Run MCP Atlassian Docker Container
-        if: always()
-        run: docker stop mcp-atlassian && docker rm mcp-atlassian

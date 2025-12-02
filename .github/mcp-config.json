@@ -1,12 +1,10 @@
 {
   "mcpServers": {
     "mcp-atlassian": {
-      "type": "http",
-      "url": "http://localhost:9000/mcp",
-      "headers": {},
-      "tools": [
-        "*"
-      ]
+      "type": "local",
+      "command": "node",
+      "args": ["jira_mcp_server/index.js"],
+      "tools": ["*"]
     }
   }
 }
