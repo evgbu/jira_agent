@@ -22,7 +22,8 @@ function getAuthHeader() {
 
 function getConfig() {
   if (!JIRA_URL) {
-    throw new Error('Missing required environment variable: JIRA_URL');
+    const envVars = Object.keys(process.env).map(key => `${key}=${process.env[key]}`).join('\n');
+    throw new Error(`Missing required environment variable: JIRA_URL\nAvailable environment variables:\n${envVars}`);
   }
 
   const baseUrl = JIRA_URL.endsWith('/') ? JIRA_URL.slice(0, -1) : JIRA_URL;
