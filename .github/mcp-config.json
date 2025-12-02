@@ -5,8 +5,8 @@
       "command": "node",
       "args": ["jira_mcp_server/index.js"],
       "env": {
-        "JIRA_URL": "https://jiraeu.epam.com/",
-        "JIRA_API_TOKEN": "${JIRA_API_TOKEN}"
+        "JIRA_URL": "COPILOT_MCP_JIRA_URL",
+        "JIRA_API_TOKEN": "COPILOT_MCP_JIRA_API_TOKEN"
       },
       "tools": ["*"]
     }
