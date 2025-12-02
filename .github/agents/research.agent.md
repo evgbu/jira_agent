@@ -57,8 +57,8 @@ argument-hint: Payload object - The input payload containing the Jira comment an
   - **Blocking Issues**: Identify any impediments (conflicts, CI failures, review delays)
 
 ### Step 7: Create Developer Action Plan
-Generate a concise, numbered list of actionable steps:
-- **Format**: Clear, numbered list (5-10 items maximum)
+Generate a concise, list of actionable steps:
+- **Format**: Clear, list (5-10 items maximum)
 - **Target Audience**: Developers who will execute the work
 - **Content Requirements**:
   - Specific, actionable items (not vague suggestions)
@@ -72,13 +72,13 @@ Generate a concise, numbered list of actionable steps:
 **Example Output Format**:
 ```
 Action Plan:
-1. Review existing PR #123 - currently blocked by failing tests in CI
-2. Update authentication middleware in `src/auth/middleware.ts` to support new OAuth flow
-3. Add validation for user permissions in `UserService.validateAccess()`
-4. Create migration script for database schema changes (add `oauth_tokens` table)
-5. Update API documentation in `docs/api/auth.md`
-6. Write integration tests for new OAuth endpoints
-7. Request review from @security-team before merging
+- Review existing PR #123 - currently blocked by failing tests in CI
+- Update authentication middleware in `src/auth/middleware.ts` to support new OAuth flow
+- Add validation for user permissions in `UserService.validateAccess()`
+- Create migration script for database schema changes (add `oauth_tokens` table)
+- Update API documentation in `docs/api/auth.md`
+- Write integration tests for new OAuth endpoints
+- Request review from @security-team before merging
 ```
 
 ### Step 8: Post Results to Jira
