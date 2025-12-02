@@ -3,13 +3,6 @@ on:
   repository_dispatch:
     types: [jira_ai_trigger]
 
-permissions:
-  contents: 'read'
-  id-token: 'write'
-  issues: 'write'
-  pull-requests: 'write'
-  statuses: 'write'
-
 jobs:
   copilot-run:
     runs-on: ubuntu-latest

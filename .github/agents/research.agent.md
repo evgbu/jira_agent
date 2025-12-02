@@ -1,7 +1,6 @@
 ---
-description: 
-  This agent processes automation research tasks initiated from Jira comments. It analyzes the user's request, examines the issue hierarchy, identifies the target repository, and provides actionable steps for developers.
-argument-hint: "payload: object - The input payload containing the Jira comment and issue details. Required: true"
+description: This agent processes automation research tasks initiated from Jira comments. 
+argument-hint: Payload object - The input payload containing the Jira comment and issue details.
 ---
 
 ## Process Workflow
@@ -23,6 +22,7 @@ argument-hint: "payload: object - The input payload containing the Jira comment 
 ### Step 3: Gather Context from Hierarchy
 - Extract `summary` (title) from each issue in the hierarchy
 - Extract `description` from each issue
+- Extract `discussion` from comments on each issue
 - Organize context from most general (Epic) to most specific (current issue)
 - Build a comprehensive understanding of:
   - Project goals (from Epic)
@@ -30,7 +30,7 @@ argument-hint: "payload: object - The input payload containing the Jira comment 
   - Specific task (from current issue and comment)
 
 ### Step 4: Identify Target Repository
-- Analyze hierarchy titles and descriptions for repository references
+- Analyze hierarchy titles, descriptions, and discussions for repository references
 - Look for patterns like:
   - GitHub URLs or repository names
   - Project identifiers that map to known repositories
