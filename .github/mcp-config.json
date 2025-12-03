@@ -6,7 +6,7 @@
       "args": ["jira_mcp_server/index.js"],
       "tools": ["*"],
       "env": {
-        "JIRA_URL": "${COPILOT_MCP_JIRA_URL}",
+        "JIRA_URL": "${JIRA_URL}",
         "JIRA_API_TOKEN": "${JIRA_API_TOKEN}"
       }
     }

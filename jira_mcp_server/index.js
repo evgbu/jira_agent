@@ -65,7 +65,6 @@ mcpServer.registerTool(
 
 // Start server with stdio transport
 async function main() {
-  console.error('Process arguments:', process.argv);
   const transport = new StdioServerTransport();
   await mcpServer.connect(transport);
 
