@@ -32,9 +32,37 @@ function getConfig() {
 
 export async function getIssue(issueKey, maxComments = 30, offset = 0) {
   const { baseUrl, authHeader } = getConfig();
-  const url = `${baseUrl}/rest/api/2/issue/${issueKey}?fields=summary,description,parent`;
+  const testRequestUrl = `${baseUrl}/rest/api/2/serverInfo`;
+  const testResponse = await fetch(testRequestUrl, {
+    method: 'GET',
+    headers: {
+      'Authorization': authHeader
+    }
+  });
 
-  const response = await fetch(url, {
+  if (!testResponse.ok) {
+    const errorText = await testResponse.text();
+    console.log(`< HTTP/1.1 ${testResponse.status} ${testResponse.statusText}`);
+    for (const [key, value] of testResponse.headers.entries()) {
+      console.log(`< ${key}: ${value}`);
+    }
+    console.log(`<`);
+    console.log(errorText);
+    console.log(`Test request failed for issue ${issueKey}: ${testResponse.status} ${testResponse.statusText} - ${errorText}`);
+  } else {
+    const responseText = await testResponse.text();
+    console.log(`< HTTP/1.1 ${testResponse.status} ${testResponse.statusText}`);
+    for (const [key, value] of testResponse.headers.entries()) {
+      console.log(`< ${key}: ${value}`);
+    }
+    console.log(`<`);
+    console.log(responseText);
+    console.log(`Test request succeeded for issue ${issueKey}: ${testResponse.status}`);
+  }
+
+
+  const issueRequestUrl = `${baseUrl}/rest/api/2/issue/${issueKey}?fields=summary,description,parent`;
+  const issueResponse = await fetch(issueRequestUrl, {
     method: 'GET',
     headers: {
       'Authorization': authHeader,
@@ -43,17 +71,17 @@ export async function getIssue(issueKey, maxComments = 30, offset = 0) {
     }
   });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Failed to fetch issue ${issueKey}: ${response.status} ${response.statusText} - ${errorText}`);
+  if (!issueResponse.ok) {
+    const errorText = await issueResponse.text();
+    throw new Error(`Failed to fetch issue ${issueKey}: ${issueResponse.status} ${issueResponse.statusText} - ${errorText}`);
   }
 
-  const data = await response.json();
+  const data = await issueResponse.json();
   const fields = data.fields || {};
 
   // Fetch comments separately with pagination
-  const commentsUrl = `${baseUrl}/rest/api/2/issue/${issueKey}/comment?startAt=${offset}&maxResults=${maxComments}`;
-  const commentsResponse = await fetch(commentsUrl, {
+  const commentsRequestUrl = `${baseUrl}/rest/api/2/issue/${issueKey}/comment?startAt=${offset}&maxResults=${maxComments}`;
+  const commentsResponse = await fetch(commentsRequestUrl, {
     method: 'GET',
     headers: {
       'Authorization': getAuthHeader(),

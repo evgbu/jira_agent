@@ -28,10 +28,10 @@ jobs:
 
       - name: Test Jira connectivity
         env:
-          JIRA_URL: "https://jiraeu.epam.com/"
+          JIRA_URL: "https://jiraeu.epam.com"
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN_PREM }}
         run: |
-          curl -v ${{ env.JIRA_URL }}rest/api/2/serverInfo \
+          curl -v --location "${{ env.JIRA_URL }}/rest/api/2/serverInfo" \
             --header "Authorization: Bearer ${{ env.JIRA_API_TOKEN }}"
 
       - name: Run Copilot
@@ -39,13 +39,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
           XDG_CONFIG_HOME: ${{ github.workspace }}
           PAYLOAD: ${{ toJson(github.event.client_payload) }}
-          JIRA_URL: "https://jiraeu.epam.com/"
+          JIRA_URL: "https://jiraeu.epam.com"
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN_PREM }}
         run: |
           copilot --allow-all-tools \
             --additional-mcp-config @".github/mcp-config.json" \
             --agent "research" \
-            -p "$PAYLOAD" \
+            --prompt "${{ env.PAYLOAD }}" \
             --log-dir ".copilot/logs/" --log-level all
 
       - name: Upload Copilot logs
