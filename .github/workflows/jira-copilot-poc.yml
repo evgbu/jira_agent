@@ -27,18 +27,20 @@ jobs:
         run: npm install --prefix jira_mcp_server
 
       - name: Run Copilot
+        env:
+          GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
+          XDG_CONFIG_HOME: ${{ github.workspace }}
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+          COPILOT_MCP_JIRA_URL: "https://jiraeu.epam.com/"
+          JIRA_URL: "https://jiraeu.epam.com/"
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN_PREM }}
         run: |
           copilot --allow-all-tools \
             --additional-mcp-config @".github/mcp-config.json" \
             --agent "research" \
             -p "$PAYLOAD" \
             --log-dir ".copilot/logs/" --log-level all
-        env:
-          GITHUB_TOKEN: ${{ secrets.COPILOT_USER_TOKEN }}
-          XDG_CONFIG_HOME: ${{ github.workspace }}
-          PAYLOAD: ${{ toJson(github.event.client_payload) }}
-          JIRA_URL: "https://jiraeu.epam.com/"
-          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN_PREM }}
+
 
       - name: Upload Copilot logs
         if: always()
