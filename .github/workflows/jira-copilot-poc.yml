@@ -3,6 +3,10 @@ on:
   repository_dispatch:
     types: [jira_ai_trigger]
 
+permissions:
+  contents: 'read'
+  pull-requests: 'read'
+
 jobs:
   copilot-run:
     runs-on: ubuntu-latest
@@ -41,8 +45,10 @@ jobs:
           PAYLOAD: ${{ toJson(github.event.client_payload) }}
           JIRA_URL: "https://jiraeu.epam.com"
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN_PREM }}
+          GITHUB_MCP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           copilot --allow-all-tools \
+            --disable-mcp-server github-mcp-server
             --additional-mcp-config @".github/mcp-config.json" \
             --agent "research" \
             --prompt "$PAYLOAD" \

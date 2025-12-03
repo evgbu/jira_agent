@@ -9,6 +9,18 @@
         "JIRA_URL": "${JIRA_URL}",
         "JIRA_API_TOKEN": "${JIRA_API_TOKEN}"
       }
+    },
+    "mcp-github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "tools": ["*"],
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_TOKEN}"
+      },
+      "env": {
+        "JIRA_URL": "${JIRA_URL}",
+        "GITHUB_MCP_TOKEN": "${GITHUB_MCP_TOKEN}"
+      }
     }
   }
 }
