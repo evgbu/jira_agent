@@ -48,11 +48,12 @@ jobs:
           GITHUB_MCP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           copilot --allow-all-tools \
-            --disable-mcp-server github-mcp-server
+            --disable-mcp-server "github-mcp-server" \
             --additional-mcp-config @".github/mcp-config.json" \
             --agent "research" \
             --prompt "$PAYLOAD" \
-            --log-dir ".copilot/logs/" --log-level all
+            --log-dir ".copilot/logs/" \
+            --log-level "all"
 
       - name: Upload Copilot logs
         if: always()
