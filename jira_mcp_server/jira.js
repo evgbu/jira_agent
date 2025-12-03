@@ -39,7 +39,7 @@ export async function getIssue(issueKey, maxComments = 30, offset = 0) {
     headers: {
       'Authorization': authHeader,
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'User-Agent': 'Jira-MCP-Client/1.0'
     }
   });
 
@@ -58,7 +58,7 @@ export async function getIssue(issueKey, maxComments = 30, offset = 0) {
     headers: {
       'Authorization': getAuthHeader(),
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'User-Agent': 'Jira-MCP-Client/1.0'
     }
   });
 
@@ -94,7 +94,8 @@ export async function addComment(issueKey, body) {
     headers: {
       'Authorization': authHeader,
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-Agent': 'Jira-MCP-Client/1.0'
     },
     body: JSON.stringify({ body })
   });
