@@ -45,7 +45,7 @@ jobs:
           copilot --allow-all-tools \
             --additional-mcp-config @".github/mcp-config.json" \
             --agent "research" \
-            --prompt "${{ env.PAYLOAD }}" \
+            --prompt "$PAYLOAD" \
             --log-dir ".copilot/logs/" --log-level all
 
       - name: Upload Copilot logs
