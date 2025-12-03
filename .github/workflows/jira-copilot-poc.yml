@@ -35,6 +35,8 @@ jobs:
           JIRA_URL: "https://jiraeu.epam.com/"
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN_PREM }}
         run: |
+          echo "Environment variables:"
+          env | sort
           copilot --allow-all-tools \
             --additional-mcp-config @".github/mcp-config.json" \
             --agent "research" \
@@ -48,4 +50,4 @@ jobs:
         with:
           name: copilot-logs
           path: .copilot/logs/
-          retention-days: 7
+          retention-days: 2
