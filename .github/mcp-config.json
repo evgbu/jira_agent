@@ -3,13 +3,11 @@
     "mcp-atlassian": {
       "type": "local",
       "command": "node",
-      "args": [
-        "jira_mcp_server/index.js",
-        "JIRA_URL=${JIRA_URL}"
-      ],
+      "args": ["jira_mcp_server/index.js"],
       "tools": ["*"],
       "env": {
-        "JIRA_URL": "${COPILOT_MCP_JIRA_URL}"
+        "JIRA_URL": "${COPILOT_MCP_JIRA_URL}",
+        "JIRA_API_TOKEN": "${JIRA_API_TOKEN}"
       }
     }
   }
