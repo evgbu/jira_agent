@@ -30,39 +30,46 @@ function getConfig() {
   return { baseUrl, authHeader: getAuthHeader() };
 }
 
-export async function getIssue(issueKey, maxComments = 30, offset = 0) {
-  const { baseUrl, authHeader } = getConfig();
-  const testRequestUrl = `${baseUrl}/rest/api/2/serverInfo`;
-  const testResponse = await fetch(testRequestUrl, {
-    method: 'GET',
-    headers: {
-      'Authorization': authHeader
-    }
-  });
+async function fetchWithRetry(url, options, maxRetries = 3, retryDelay = 1000) {
+  let lastError;
 
-  if (!testResponse.ok) {
-    const errorText = await testResponse.text();
-    console.log(`< HTTP/1.1 ${testResponse.status} ${testResponse.statusText}`);
-    for (const [key, value] of testResponse.headers.entries()) {
-      console.log(`< ${key}: ${value}`);
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+
+      // If request succeeds or fails with a non-retryable error, return the response
+      if (response.ok || (response.status >= 400 && response.status < 500 && response.status !== 406)) {
+        return response;
+      }
+
+      // For 5xx errors or 406, retry
+      if (attempt < maxRetries) {
+        const errorText = await response.text();
+        console.error(`Attempt ${attempt}/${maxRetries} failed: ${response.status} ${response.statusText} - ${errorText}. Retrying in ${retryDelay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+        continue;
+      }
+
+      // Last attempt, return the response (will be handled by caller)
+      return response;
+    } catch (error) {
+      lastError = error;
+      if (attempt < maxRetries) {
+        console.error(`Attempt ${attempt}/${maxRetries} failed with error: ${error.message}. Retrying in ${retryDelay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+      }
     }
-    console.log(`<`);
-    console.log(errorText);
-    console.log(`Test request failed for issue ${issueKey}: ${testResponse.status} ${testResponse.statusText} - ${errorText}`);
-  } else {
-    const responseText = await testResponse.text();
-    console.log(`< HTTP/1.1 ${testResponse.status} ${testResponse.statusText}`);
-    for (const [key, value] of testResponse.headers.entries()) {
-      console.log(`< ${key}: ${value}`);
-    }
-    console.log(`<`);
-    console.log(responseText);
-    console.log(`Test request succeeded for issue ${issueKey}: ${testResponse.status}`);
   }
 
+  // If we exhausted all retries with exceptions, throw the last error
+  throw lastError;
+}
+
+export async function getIssue(issueKey, maxComments = 30, offset = 0) {
+  const { baseUrl, authHeader } = getConfig();
 
   const issueRequestUrl = `${baseUrl}/rest/api/2/issue/${issueKey}?fields=summary,description,parent`;
-  const issueResponse = await fetch(issueRequestUrl, {
+  const issueResponse = await fetchWithRetry(issueRequestUrl, {
     method: 'GET',
     headers: {
       'Authorization': authHeader,
@@ -81,7 +88,7 @@ export async function getIssue(issueKey, maxComments = 30, offset = 0) {
 
   // Fetch comments separately with pagination
   const commentsRequestUrl = `${baseUrl}/rest/api/2/issue/${issueKey}/comment?startAt=${offset}&maxResults=${maxComments}`;
-  const commentsResponse = await fetch(commentsRequestUrl, {
+  const commentsResponse = await fetchWithRetry(commentsRequestUrl, {
     method: 'GET',
     headers: {
       'Authorization': getAuthHeader(),
@@ -117,7 +124,7 @@ export async function addComment(issueKey, body) {
   const { baseUrl, authHeader } = getConfig();
   const url = `${baseUrl}/rest/api/2/issue/${issueKey}/comment`;
 
-  const response = await fetch(url, {
+  const response = await fetchWithRetry(url, {
     method: 'POST',
     headers: {
       'Authorization': authHeader,
