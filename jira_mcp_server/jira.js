@@ -68,7 +68,7 @@ async function fetchWithRetry(url, options, maxRetries = 3, retryDelay = 1000) {
 export async function getIssue(issueKey, maxComments = 30, offset = 0) {
   const { baseUrl, authHeader } = getConfig();
 
-  const issueRequestUrl = `${baseUrl}/rest/api/2/issue/${issueKey}?fields=summary,description,parent`;
+  const issueRequestUrl = `${baseUrl}/issue/${issueKey}?fields=summary,description,parent`;
   const issueResponse = await fetchWithRetry(issueRequestUrl, {
     method: 'GET',
     headers: {
@@ -87,7 +87,7 @@ export async function getIssue(issueKey, maxComments = 30, offset = 0) {
   const fields = data.fields || {};
 
   // Fetch comments separately with pagination
-  const commentsRequestUrl = `${baseUrl}/rest/api/2/issue/${issueKey}/comment?startAt=${offset}&maxResults=${maxComments}`;
+  const commentsRequestUrl = `${baseUrl}/issue/${issueKey}/comment?startAt=${offset}&maxResults=${maxComments}`;
   const commentsResponse = await fetchWithRetry(commentsRequestUrl, {
     method: 'GET',
     headers: {
@@ -122,7 +122,7 @@ export async function getIssue(issueKey, maxComments = 30, offset = 0) {
 
 export async function addComment(issueKey, body) {
   const { baseUrl, authHeader } = getConfig();
-  const url = `${baseUrl}/rest/api/2/issue/${issueKey}/comment`;
+  const url = `${baseUrl}/issue/${issueKey}/comment`;
 
   const response = await fetchWithRetry(url, {
     method: 'POST',
