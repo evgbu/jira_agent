@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * MCP Server for Jira on-premises
  * Provides tools: jira_get_issue, jira_add_comment
